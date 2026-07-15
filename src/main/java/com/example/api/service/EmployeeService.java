@@ -33,4 +33,27 @@ public class EmployeeService {
     public Employee saveEmployee(Employee employee) {
         return employeeRepository.save(employee);
     }
+
+    public Employee updateEmployee(Employee employee) {
+        return employeeRepository.save(employee);
+    }
+
+    public Employee partialUpdate(Employee employee, Long id) {
+        Employee employee1 = employeeRepository.findById(id).orElseThrow(
+                ()->new RuntimeException("Utilisateur introuvable"));
+        if (employee.getFirstName() != null){
+            employee1.setFirstName(employee.getFirstName());
+        }
+        if (employee.getLastName() != null){
+            employee1.setLastName(employee.getLastName());
+        }
+        if (employee.getMail() != null){
+            employee1.setMail(employee.getMail());
+        }
+        if (employee.getPassword() != null){
+            employee1.setPassword(employee.getPassword());
+        }
+
+        return employeeRepository.save(employee1);
+    }
 }

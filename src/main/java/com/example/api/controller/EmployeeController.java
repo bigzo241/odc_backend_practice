@@ -2,6 +2,7 @@ package com.example.api.controller;
 
 import com.example.api.model.Employee;
 import com.example.api.service.EmployeeService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +20,7 @@ public class EmployeeController {
      * @return The saved employee object saved
      */
     @PostMapping("/employee")
-    public Employee createEmployee(@RequestBody Employee employee){
+    public Employee createEmployee(@Valid @RequestBody Employee employee){
         return employeeService.saveEmployee(employee);
     }
 
@@ -59,4 +60,28 @@ public class EmployeeController {
     public void deleteEmployees() {
         employeeService.deleteEmployees();
     }
+
+    @PutMapping("/employees/{id}")
+    public Employee updateEmployee(@PathVariable Long id, @RequestBody Employee employee) {
+        Optional<Employee> existingEmployee = employeeService.getEmployee(id);
+        if (existingEmployee.isPresent()) {
+            Employee updatedEmployee = existingEmployee.get();
+            updatedEmployee.setFirstName(employee.getFirstName());
+            updatedEmployee.setLastName(employee.getLastName());
+            updatedEmployee.setMail(employee.getMail());
+            return employeeService.updateEmployee(updatedEmployee);
+        } else {
+            // Handle the case when the employee with the given ID does not exist
+            // You can throw an exception or return a specific response
+            return null; // Placeholder, you can customize this behavior
+        }
+    }
+
+    @PatchMapping("/employee/{id}")
+    public Employee partialUpdate(@PathVariable Long id, @RequestBody Employee employee) {
+        //Optional<Employee> existingEmployee = employeeService.getEmployee(id);
+        return employeeService.partialUpdate(employee, id);
+    }
 }
+
+
